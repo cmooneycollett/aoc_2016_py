@@ -4,8 +4,7 @@ produce the correct solutions for AOC 2016.
 """
 
 import unittest
-
-import solutions
+import solutions.day_01
 
 
 class SolutionsTestMethods(unittest.TestCase):
@@ -22,15 +21,13 @@ class SolutionsTestMethods(unittest.TestCase):
         solution = solutions.day_01.solve_part1(input_data)
         self.assertEqual(332, solution)
 
-    # def test_day_01_p2(self):
-    #     """
-    #     Solution test method for AOC 2016 Day 1 Part 2.
-    #     """
-    #     input_data = solutions.day_01.process_input_file()
-    #     solution = solutions.day_01.solve_part2(input_data)
-    #     # self.assertEqual(False, solution)
-
-
+    def test_day_01_p2(self):
+        """
+        Solution test method for AOC 2016 Day 1 Part 2.
+        """
+        input_data = solutions.day_01.process_input_file()
+        solution = solutions.day_01.solve_part2(input_data)
+        self.assertEqual(166, solution)
 
 
 if __name__ == "__main__":

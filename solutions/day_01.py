@@ -6,13 +6,14 @@ from dataclasses import dataclass
 from enum import auto, Enum, unique
 
 
-@dataclass
+@dataclass(frozen=True, eq=True)
 class Location2D:
     """
     Represents a point location on a two-dimensional plane.
     """
     loc_x: int
     loc_y: int
+
 
 @unique
 class CardinalDirection(Enum):
@@ -63,8 +64,8 @@ def main():
     input_data = process_input_file()
     p1_solution = solve_part1(input_data)
     print(f"P1 solution - {p1_solution}")
-    # p2_solution = solve_part2(input_data)
-    # print(f"P2 solution - {p2_solution}")
+    p2_solution = solve_part2(input_data)
+    print(f"P2 solution - {p2_solution}")
 
 
 def process_input_file():
@@ -90,8 +91,8 @@ def solve_part1(input_data):
     conducting the steps given in the input data and calculating the Manhattan
     distance of the resulting location from the origin.
     """
-    direction = CardinalDirection.NORTH # Start by facing North
-    location = Location2D(0, 0) # Assume starting location as 2D origin
+    direction = CardinalDirection.NORTH  # Start by facing North
+    location = Location2D(0, 0)  # Assume starting location as 2D origin
     for (turn_direction, steps) in input_data:
         if turn_direction == "L":   # Left turn
             direction = direction.rotate90_counterclockwise()
@@ -100,19 +101,53 @@ def solve_part1(input_data):
         # Take steps in current direction
         match direction:
             case CardinalDirection.NORTH:
-                location.loc_y += steps
+                location = Location2D(location.loc_x, location.loc_y + steps)
             case CardinalDirection.EAST:
-                location.loc_x += steps
+                location = Location2D(location.loc_x + steps, location.loc_y)
             case CardinalDirection.SOUTH:
-                location.loc_y -= steps
+                location = Location2D(location.loc_x, location.loc_y - steps)
             case CardinalDirection.WEST:
-                location.loc_x -= steps
+                location = Location2D(location.loc_x - steps, location.loc_y)
     # Calculate Manhattan distance of end location from origin
     return abs(location.loc_x) + abs(location.loc_y)
 
 
 def solve_part2(input_data):
-    return
+    """
+    Determines the location of Easter Bunny HQ by identifying how many blocks
+    away from the origin (Manhattan distance) the first location to be visited
+    twice is.
+    """
+    direction = CardinalDirection.NORTH  # Start by facing North
+    location = Location2D(0, 0)  # Assume starting location as 2D origin
+    locations_visited = set()   # Track locations that have been visited
+    locations_visited.add(location)
+    for (turn_direction, steps) in input_data:
+        if turn_direction == "L":   # Left turn
+            direction = direction.rotate90_counterclockwise()
+        else:   # Right turn
+            direction = direction.rotate90_clockwise()
+        # Take each step separately
+        found_bunny_hq = False
+        for _ in range(0, steps):
+            match direction:
+                case CardinalDirection.NORTH:
+                    location = Location2D(location.loc_x, location.loc_y + 1)
+                case CardinalDirection.EAST:
+                    location = Location2D(location.loc_x + 1, location.loc_y)
+                case CardinalDirection.SOUTH:
+                    location = Location2D(location.loc_x, location.loc_y - 1)
+                case CardinalDirection.WEST:
+                    location = Location2D(location.loc_x - 1, location.loc_y)
+            # Add location to visited location and check if it has been visited
+            if location in locations_visited:
+                found_bunny_hq = True
+                break
+            locations_visited.add(location)
+        if found_bunny_hq:
+            break
+    # Calculate Manhattan distance of end location from origin
+    return abs(location.loc_x) + abs(location.loc_y)
 
 
 if __name__ == "__main__":
