@@ -2,70 +2,8 @@
 Solutions for AOC 2016 Day 1.
 """
 
-from dataclasses import dataclass
-from enum import auto, Enum, unique
 
-
-@dataclass(frozen=True, eq=True)
-class Location2D:
-    """
-    Represents a point location on a two-dimensional plane.
-    """
-    loc_x: int
-    loc_y: int
-
-
-@unique
-class CardinalDirection(Enum):
-    """
-    Represents the four different cardinal directions of: North, East, South and
-    West.
-    """
-    NORTH = auto()
-    EAST = auto()
-    SOUTH = auto()
-    WEST = auto()
-
-    def rotate90_clockwise(self):
-        """
-        Gets the resulting cardinal direction after rotating by 90 degrees in
-        the clockwise direction.
-        """
-        match self:
-            case CardinalDirection.NORTH:
-                return CardinalDirection.EAST
-            case CardinalDirection.EAST:
-                return CardinalDirection.SOUTH
-            case CardinalDirection.SOUTH:
-                return CardinalDirection.WEST
-            case CardinalDirection.WEST:
-                return CardinalDirection.NORTH
-
-    def rotate90_counterclockwise(self):
-        """
-        Gets the resulting cardinal direction after rotating by 90 degrees in
-        the counter-clockwise direction.
-        """
-        match self:
-            case CardinalDirection.NORTH:
-                return CardinalDirection.WEST
-            case CardinalDirection.EAST:
-                return CardinalDirection.NORTH
-            case CardinalDirection.SOUTH:
-                return CardinalDirection.EAST
-            case CardinalDirection.WEST:
-                return CardinalDirection.SOUTH
-
-
-def main():
-    """
-    Solves AOC 2016 Day 1 Parts 1 and 2, printing out the solutions.
-    """
-    input_data = process_input_file()
-    p1_solution = solve_part1(input_data)
-    print(f"P1 solution - {p1_solution}")
-    p2_solution = solve_part2(input_data)
-    print(f"P2 solution - {p2_solution}")
+from src.utils.cartography import CardinalDirection, Location2D
 
 
 def process_input_file():
@@ -148,7 +86,3 @@ def solve_part2(input_data):
             break
     # Calculate Manhattan distance of end location from origin
     return abs(location.loc_x) + abs(location.loc_y)
-
-
-if __name__ == "__main__":
-    main()
