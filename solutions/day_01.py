@@ -1,21 +1,28 @@
+"""
+Solutions for AOC 2016 Day 1.
+"""
+
 def main():
-    input = process_input_file()
-    p1_solution = solve_part1(input)
-    print("P1 solution - {}".format(p1_solution))
-    p2_solution = solve_part2(input)
-    print("P2 solution - {}".format(p2_solution))
+    """
+    Solves AOC 2016 Day 1 Parts 1 and 2, printing out the solutions.
+    """
+    # input_data = process_input_file()
+    # p1_solution = solve_part1(input_data)
+    # print(f"P1 solution - {p1_solution}")
+    # p2_solution = solve_part2(input_data)
+    # print(f"P2 solution - {p2_solution}")
 
 
 def process_input_file():
-    ()
+    return
 
 
-def solve_part1(input):
-    ()
+def solve_part1(input_data):
+    return
 
 
-def solve_part2(input):
-    ()
+def solve_part2(input_data):
+    return
 
 
 if __name__ == "__main__":
