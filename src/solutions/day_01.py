@@ -14,7 +14,7 @@ def process_input_file():
     taken (as int).
     """
     input_data = []
-    with open("./inputs/day_01.txt", encoding="utf-8") as file:
+    with open("./input/day_01.txt", encoding="utf-8") as file:
         raw_input = file.read().strip()
         for order in raw_input.split(", "):
             direction = order[0]

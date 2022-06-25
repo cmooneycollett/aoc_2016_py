@@ -12,7 +12,7 @@ def process_input_file():
     solver functions. Returned value is a list containing the strings listed
     in the input file.
     """
-    with open("./inputs/day_02.txt", encoding="utf-8") as file:
+    with open("./input/day_02.txt", encoding="utf-8") as file:
         return [line.strip() for line in file.readlines()
                 if len(line.strip()) > 0]
 
