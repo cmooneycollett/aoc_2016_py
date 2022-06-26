@@ -5,6 +5,7 @@ Solutions for AOC 2016 Day ##.
 from collections import Counter
 import re
 
+
 class Room:
     """
     Represents a Room as specified at the information kiosk in the Easter Bunny
@@ -27,18 +28,28 @@ class Room:
         if len(char_counts) < 5:
             return False
         # Sort the elements by their count, then alphabetically for ties
-        elements_sorted = sorted(char_counts.most_common(), \
-            key=lambda count: (-count[1], count[0]))
+        elements_sorted = sorted(char_counts.most_common(),
+                                 key=lambda count: (-count[1], count[0]))
         checksum = "".join(char for (char, _) in elements_sorted[0:5])
         return self.checksum == checksum
 
-    def decrypt_name(self):
+    def get_decrypted_name(self):
         """
         Returns the decrypted name of the room, determined by taking the
         encrypted name and forward-rotating the alphabetical characters a
         number of times equal to its sector ID.
         """
-        return ""
+        decrypted_chars = list(self.encrypted_name)
+        for (i, char) in enumerate(decrypted_chars):
+            # Replace "-" with a single " "
+            if char == "-":
+                decrypted_chars[i] = " "
+                continue
+            # Rotate the current character through a-z by sector_id steps
+            decrypted_chars[i] = chr(ord("a") + (ord(char) - ord("a") +
+                                                 self.sector_id) % 26)
+        decrypted_chars = "".join(decrypted_chars)
+        return "".join(decrypted_chars)
 
 
 def process_input_file():
@@ -81,4 +92,13 @@ def solve_part1(input_data):
 
 
 def solve_part2(input_data):
-    return False
+    """
+    Returns the sector ID of the room whose decrypted (real) name indicates that
+    it stores the North Pole objects.
+    """
+    for room in input_data:
+        # Check if decrypted room name indicates room contains northpole objects
+        decrypted_name = room.get_decrypted_name()
+        if decrypted_name == "northpole object storage":
+            return room.sector_id
+    return -1

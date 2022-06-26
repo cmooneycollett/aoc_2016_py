@@ -64,11 +64,19 @@ class SolutionsTestMethods(unittest.TestCase):
 
     def test_day_04_p1(self):
         """
-        Solution test method for AOC 2016 Day 3 Part 2.
+        Solution test method for AOC 2016 Day 4 Part 1.
         """
         input_data = day_04.process_input_file()
         solution = day_04.solve_part1(input_data)
         self.assertEqual(173787, solution)
+
+    def test_day_04_p2(self):
+        """
+        Solution test method for AOC 2016 Day 4 Part 2.
+        """
+        input_data = day_04.process_input_file()
+        solution = day_04.solve_part2(input_data)
+        self.assertEqual(548, solution)
 
 
 if __name__ == "__main__":
