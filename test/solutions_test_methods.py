@@ -3,8 +3,9 @@ This module contains the test methods required to verify that the coded solvers
 produce the correct solutions for AOC 2016.
 """
 
+
 import unittest
-from src.solutions import day_01, day_02
+from src.solutions import day_01, day_02, day_03
 
 
 class SolutionsTestMethods(unittest.TestCase):
@@ -44,6 +45,14 @@ class SolutionsTestMethods(unittest.TestCase):
         input_data = day_02.process_input_file()
         solution = day_02.solve_part2(input_data)
         self.assertEqual("57DD8", solution)
+
+    def test_day_03_p1(self):
+        """
+        Solution test method for AOC 2016 Day 3 Part 1.
+        """
+        input_data = day_03.process_input_file()
+        solution = day_03.solve_part1(input_data)
+        self.assertEqual(862, solution)
 
 
 if __name__ == "__main__":
