@@ -56,28 +56,3 @@ class Location2D:
     """
     loc_x: int
     loc_y: int
-
-
-# class Location2D:
-#     """
-#     Represents a point location on a two-dimensional plane.
-#     """
-
-#     def __init__(self, loc_x, loc_y):
-#         self.loc_x = loc_x
-#         self.loc_y = loc_y
-
-#     def __hash__(self):
-#         return (53  + self.loc_x) * 53 + self.loc_y
-#         # return hash(val for val in [self.loc_x, self.loc_y * 10])
-#         # hash_value = hash(self.loc_x)
-#         # hash_value = hash(self.loc_y)
-#         # return hash_value
-
-#     def update_location(self, delta_x, delta_y):
-#         """
-#         Updates the location by adjusting the x- and y-values by the given
-#         delta values.
-#         """
-#         self.loc_x += delta_x
-#         self.loc_y += delta_y
