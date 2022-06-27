@@ -49,7 +49,6 @@ class Room:
             # Rotate the current character through a-z by sector_id steps
             decrypted_chars[i] = chr(ord("a") + (ord(char) - ord("a") +
                                                  self.sector_id) % 26)
-        decrypted_chars = "".join(decrypted_chars)
         return "".join(decrypted_chars)
 
 
