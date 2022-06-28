@@ -90,9 +90,9 @@ if __name__ == "__main__":
     from src.solutions import day_01, day_02, day_03, day_04, day_05, day_06
     # Main solver methods
     print("==========")
-    # solve_day_01()
-    # solve_day_02()
-    # solve_day_03()
-    # solve_day_04()
-    # solve_day_05()
+    solve_day_01()
+    solve_day_02()
+    solve_day_03()
+    solve_day_04()
+    solve_day_05()
     solve_day_06()
