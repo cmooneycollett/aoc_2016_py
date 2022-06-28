@@ -4,12 +4,12 @@ Solutions for AOC 2016 Day ##.
 
 
 def process_input_file():
-    return
+    return -1
 
 
 def solve_part1(input_data):
-    return
+    return -1
 
 
 def solve_part2(input_data):
-    return
+    return -1
