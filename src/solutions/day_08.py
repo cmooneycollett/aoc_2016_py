@@ -2,6 +2,7 @@
 Solutions for AOC 2016 Day 8.
 """
 
+
 from enum import Enum, auto, unique
 import re
 
@@ -68,12 +69,14 @@ def solve_part2(input_data):
     decoded = decode_screen_display(screen_grid)
     return decoded
 
+
 def decode_screen_display(screen_grid):
     """
     Takes the given screen grid and determines the 10 letters encoded on the
     screen. If a letter match cannot be determined for a character position,
     the "#" character is added to the decoded output in that place.
     """
+    # Representations of letters "A" - "Z" in w:5xh:6 pixel screen segments
     letters = {
         "A": [".##..", "#..#.", "#..#.", "####.", "#..#.", "#..#."],
         "B": ["###..", "#..#.", "###..", "#..#.", "#..#.", "###.."],
@@ -103,21 +106,25 @@ def decode_screen_display(screen_grid):
         "Z": ["####.", "...#.", "..#..", ".#...", "#....", "####."]
     }
     decoded = ""
+    # Start at the top-left of each letter segment in the screen as reference
     for index in range(0, len(screen_grid[0]), len(screen_grid[0]) // 10):
         index_letter_match = False
-        for (letter, letter_rows) in letters.items():
+        for (letter, rep) in letters.items():
             current_letter_match = True
+            # Check stored letter representation against current screen tile
             for loc_y in range(0, 6):
                 for loc_x in range(index, index + 5):
-                    if screen_grid[loc_y][loc_x] != letter_rows[loc_y][loc_x - index]:
+                    if screen_grid[loc_y][loc_x] != rep[loc_y][loc_x - index]:
                         current_letter_match = False
                         break
                 if not current_letter_match:
                     break
+            # Add letter to decoded sequence if match if found
             if current_letter_match:
                 index_letter_match = True
                 decoded += letter
                 break
+        # If no matching letter found for current tile, add "#" to decoded seq
         if not index_letter_match:
             decoded += "#"
     return decoded
@@ -126,7 +133,7 @@ def decode_screen_display(screen_grid):
 def process_instructions(screen_grid, instructions):
     """
     Processes the given instructions by modifying the given screen grid (2D
-    array)
+    array).
     """
     for (instruction, param_1, param_2) in instructions:
         match instruction:
