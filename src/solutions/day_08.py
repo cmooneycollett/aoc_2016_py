@@ -54,7 +54,81 @@ def solve_part1(input_data):
     executed.
     """
     screen_grid = [["." for _ in range(0, 50)] for _ in range(0, 6)]
-    for (instruction, param_1, param_2) in input_data:
+    process_instructions(screen_grid, input_data)
+    return sum(row.count("#") for row in screen_grid)
+
+
+def solve_part2(input_data):
+    """
+    Solves AOC 2016 Day 8 Part 2 // Applies the instructions given in the input
+    data and determines the resulting code displayed by the screen.
+    """
+    screen_grid = [["." for _ in range(0, 50)] for _ in range(0, 6)]
+    process_instructions(screen_grid, input_data)
+    decoded = decode_screen_display(screen_grid)
+    return decoded
+
+def decode_screen_display(screen_grid):
+    """
+    Takes the given screen grid and determines the 10 letters encoded on the
+    screen. If a letter match cannot be determined for a character position,
+    the "#" character is added to the decoded output in that place.
+    """
+    letters = {
+        "A": [".##..", "#..#.", "#..#.", "####.", "#..#.", "#..#."],
+        "B": ["###..", "#..#.", "###..", "#..#.", "#..#.", "###.."],
+        "C": [".###.", "#....", "#....", "#....", "#....", ".###."],
+        "D": ["###..", "#..#.", "#..#.", "#..#.", "#..#.", "###.."],
+        "E": ["####.", "#....", "####.", "#....", "#....", "####."],
+        "F": ["####.", "#....", "###..", "#....", "#....", "#...."],
+        "G": ["####.", "#..#.", "#....", "#.##.", "#..#.", "####."],
+        "H": ["#..#.", "#..#.", "####.", "#..#.", "#..#.", "#..#."],
+        "I": ["#####", "..#..", "..#..", "..#..", "..#..", "#####"],
+        "J": ["..##.", "...#.", "...#.", "...#.", "#..#.", ".##.."],
+        "K": ["#..#.", "#.#..", "##...", "##...", "#.#..", "#..#."],
+        "L": ["#....", "#....", "#....", "#....", "#....", "####."],
+        "M": ["#...#", "##.##", "#.#.#", "#...#", "#...#", "#...#"],
+        "N": ["#...#", "##..#", "#.#.#", "#..##", "#...#", "#...#"],
+        "O": ["####.", "#..#.", "#..#.", "#..#.", "#..#.", "####."],
+        "P": ["###..", "#..#.", "#..#.", "###..", "#....", "#...."],
+        "Q": [".##..", "#..#.", "#..#.", "#..#.", ".###.", "....#"],
+        "R": ["###..", "#..#.", "#..#.", "###..", "#.#..", "#..#."],
+        "S": [".###.", "#....", "#....", ".##..", "...#.", "###.."],
+        "T": ["#####", "..#..", "..#..", "..#..", "..#..", "..#.."],
+        "U": ["#..#.", "#..#.", "#..#.", "#..#.", "#..#.", ".##.."],
+        "V": ["#...#", "#...#", "#...#", "#...#", ".#.#.", "..#.."],
+        "W": ["#...#", "#...#", "#.#.#", "#.#.#", "#.#.#", "#####"],
+        "X": ["#...#", ".#.#.", "..#..", "..#..", ".#.#.", "#...#"],
+        "Y": ["#...#", ".#.#.", "..#..", "..#..", "..#..", "..#.."],
+        "Z": ["####.", "...#.", "..#..", ".#...", "#....", "####."]
+    }
+    decoded = ""
+    for index in range(0, len(screen_grid[0]), len(screen_grid[0]) // 10):
+        index_letter_match = False
+        for (letter, letter_rows) in letters.items():
+            current_letter_match = True
+            for loc_y in range(0, 6):
+                for loc_x in range(index, index + 5):
+                    if screen_grid[loc_y][loc_x] != letter_rows[loc_y][loc_x - index]:
+                        current_letter_match = False
+                        break
+                if not current_letter_match:
+                    break
+            if current_letter_match:
+                index_letter_match = True
+                decoded += letter
+                break
+        if not index_letter_match:
+            decoded += "#"
+    return decoded
+
+
+def process_instructions(screen_grid, instructions):
+    """
+    Processes the given instructions by modifying the given screen grid (2D
+    array)
+    """
+    for (instruction, param_1, param_2) in instructions:
         match instruction:
             case Instruction.RECT:
                 width = param_1
@@ -80,11 +154,3 @@ def solve_part1(input_data):
                     for old_y in range(0, len(screen_grid)):
                         new_y = (old_y + 1) % len(screen_grid)
                         screen_grid[new_y][col] = prior_col[old_y]
-    return sum(row.count("#") for row in screen_grid)
-
-
-def solve_part2(input_data):
-    """
-    Solves AOC 2016 Day 8 Part 2 // ###
-    """
-    return ()
