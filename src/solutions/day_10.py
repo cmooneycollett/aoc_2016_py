@@ -51,8 +51,8 @@ def process_input_file():
     initial microchips), output bins and bot instructions (in this order).
     """
     regex_value = re.compile(r"^value (\d+) goes to bot (\d+)$")
-    regex_bot_instruction = re.compile(r"^bot (\d+) gives low to (bot|output) "
-                                       r"(\d+) and high to (bot|output) (\d+)$")
+    regex_bot_instr = re.compile(r"^bot (\d+) gives low to (bot|output) "
+                                 r"(\d+) and high to (bot|output) (\d+)$")
     bots = {}
     outputs = {}
     instructions = []
@@ -68,13 +68,13 @@ def process_input_file():
                     bots[bot_id] = [value]
                 else:
                     bots[bot_id].append(value)
-            elif (match_bot_instruction := regex_bot_instruction.match(line)) is not None:
-                from_bot = int(match_bot_instruction.group(1))
-                low_target = Entity.from_string(match_bot_instruction.group(2))
-                low_id = int(match_bot_instruction.group(3))
+            elif (match_bot_instr := regex_bot_instr.match(line)) is not None:
+                from_bot = int(match_bot_instr.group(1))
+                low_target = Entity.from_string(match_bot_instr.group(2))
+                low_id = int(match_bot_instr.group(3))
                 high_target = Entity.from_string(
-                    match_bot_instruction.group(4))
-                high_id = int(match_bot_instruction.group(5))
+                    match_bot_instr.group(4))
+                high_id = int(match_bot_instr.group(5))
                 # Initial populate from bot into bots map
                 if from_bot not in bots:
                     bots[from_bot] = []
@@ -152,8 +152,42 @@ def solve_part1(input_data):
     return -1
 
 
-def solve_part2(_input_data):
+def solve_part2(input_data):
     """
-    Solves AOC 2016 Day 10 Part 2 // ###
+    Solves AOC 2016 Day 10 Part 2 // Processes all instructions in the input
+    and returns the product of the chip values in outputs 0, 1 and 2.
     """
-    return -1
+    (bots, outputs, instructions) = deepcopy(input_data)
+    # Execute each instruction
+    processed_instructions = []
+    while len(instructions) > 0:
+        instruction_to_remove = []
+        for instruction in instructions:
+            if len(bots[instruction.from_bot]) != 2:
+                continue
+            instruction_to_remove.append(instruction)
+            low_chip = bots[instruction.from_bot][0]
+            high_chip = bots[instruction.from_bot][1]
+            bots[instruction.from_bot] = []
+            # Low chip
+            if instruction.low_target == Entity.BOT:
+                bots[instruction.low_id].append(low_chip)
+                bots[instruction.low_id] = sorted(bots[instruction.low_id])
+            else:
+                outputs[instruction.low_id].append(low_chip)
+                outputs[instruction.low_id] = sorted(
+                    outputs[instruction.low_id])
+            # High chip
+            if instruction.high_target == Entity.BOT:
+                bots[instruction.high_id].append(high_chip)
+                bots[instruction.high_id] = sorted(bots[instruction.high_id])
+            else:
+                outputs[instruction.high_id].append(high_chip)
+                outputs[instruction.high_id] = sorted(
+                    outputs[instruction.high_id])
+        if len(instruction_to_remove) == 0:
+            break
+        instructions.remove(instruction_to_remove[0])
+        processed_instructions.append(instruction_to_remove[0])
+    # Return the product of microchip in outputs 0, 1 and 2
+    return outputs[0][0] * outputs[1][0] * outputs[2][0]
