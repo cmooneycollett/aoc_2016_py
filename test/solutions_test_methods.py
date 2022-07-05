@@ -6,7 +6,7 @@ produce the correct solutions for AOC 2016.
 
 import unittest
 from src.solutions import day_01, day_02, day_03, day_04, day_05, day_06, \
-    day_07, day_08, day_09
+    day_07, day_08, day_09, day_10
 
 
 class SolutionsTestMethods(unittest.TestCase):
@@ -158,6 +158,14 @@ class SolutionsTestMethods(unittest.TestCase):
         input_data = day_09.process_input_file()
         solution = day_09.solve_part2(input_data)
         self.assertEqual(10964557606, solution)
+
+    def test_day_10_p1(self):
+        """
+        Solution test method for AOC 2016 Day 10 Part 1.
+        """
+        input_data = day_10.process_input_file()
+        solution = day_10.solve_part1(input_data)
+        self.assertEqual(98, solution)
 
 
 if __name__ == "__main__":
