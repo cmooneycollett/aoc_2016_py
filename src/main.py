@@ -139,8 +139,8 @@ def solve_day_11():
     """
     print("AOC 2016 Day 11 - \"Radioisotope Thermoelectric Generators\"")
     input_data = day_11.process_input_file()
-    p1_solution = day_11.solve_part1(input_data)
-    print(f"> P1 solution - {p1_solution}")
+    # p1_solution = day_11.solve_part1(input_data)
+    # print(f"> P1 solution - {p1_solution}")
     p2_solution = day_11.solve_part2(input_data)
     print(f"> P2 solution - {p2_solution}")
     print("==========")

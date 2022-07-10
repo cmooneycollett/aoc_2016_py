@@ -18,6 +18,7 @@ class ComponentType(Enum):
     """
     GENERATOR = auto()
     MICROCHIP = auto()
+    PAIR = auto()
 
 
 @dataclass
@@ -75,11 +76,24 @@ def solve_part1(input_data):
     return find_minimum_moves_to_top_floor(input_data)
 
 
-def solve_part2(_input_data):
+def solve_part2(input_data):
     """
-    Solves AOC 2016 Day 11 Part 2 // ###
+    Solves AOC 2016 Day 11 Part 2 // Determines the minimum number of moves
+    required to move all componets to the top floor, after adding the additional
+    elerium and dilithium components.
     """
-    return -1
+    initial_state = deepcopy(input_data)
+    initial_state.floor_data[1].append(
+        Component(ComponentType.GENERATOR, "elerium"))
+    initial_state.floor_data[1].append(
+        Component(ComponentType.MICROCHIP, "elerium"))
+    initial_state.floor_data[1].append(
+        Component(ComponentType.GENERATOR, "dilithium"))
+    initial_state.floor_data[1].append(
+        Component(ComponentType.MICROCHIP, "dilithium"))
+    initial_state.floor_data[1] = sorted(
+        initial_state.floor_data[1], key=lambda comp: (comp.type.value, comp.name))
+    return find_minimum_moves_to_top_floor(initial_state)
 
 
 def find_minimum_moves_to_top_floor(initial_state):
@@ -96,6 +110,7 @@ def find_minimum_moves_to_top_floor(initial_state):
             return state.moves
         if state.moves > max_moves_seen:
             max_moves_seen = state.moves
+            print(f">>> moves: {max_moves_seen}")
         # Find all the possible next states from the current state
         for next_state in get_next_states(state):
             # If a next state hasn't been seen already, add it to back of queue
@@ -109,7 +124,17 @@ def calculate_state_hash(state):
     Calculates the hash of the given state, by hashing the string representation
     of the state.
     """
-    return hash(f"moves {state.moves} // floor {state.floor} // {str(state.floor_data)}")
+    modified_floor_data = deepcopy(state.floor_data)
+    for floor in range(1, 5):
+        for comp in state.floor_data[floor]:
+            if comp.type == ComponentType.MICROCHIP and \
+                    Component(ComponentType.GENERATOR, comp.name) in state.floor_data[floor]:
+                modified_floor_data[floor].remove(comp)
+                modified_floor_data[floor].remove(
+                    Component(ComponentType.GENERATOR, comp.name))
+                modified_floor_data[floor].append(
+                    Component(ComponentType.PAIR, "PAIR"))
+    return hash(f"moves {state.moves} // floor {state.floor} // {str(modified_floor_data)}")
 
 
 def get_next_states(state):
