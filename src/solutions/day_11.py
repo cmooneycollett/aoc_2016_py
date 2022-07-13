@@ -80,7 +80,7 @@ def solve_part2(input_data):
     """
     Solves AOC 2016 Day 11 Part 2 // Determines the minimum number of moves
     required to move all componets to the top floor, after adding the additional
-    elerium and dilithium components.
+    elerium and dilithium generator and microchip.
     """
     initial_state = deepcopy(input_data)
     initial_state.floor_data[1].append(
@@ -103,14 +103,10 @@ def find_minimum_moves_to_top_floor(initial_state):
     """
     state_queue = deque([initial_state])
     seen_states = set([calculate_state_hash(initial_state)])
-    max_moves_seen = 0
     while len(state_queue) > 0:
         state = state_queue.popleft()
         if state.floor == 4 and check_if_all_components_at_top_floor(state):
             return state.moves
-        if state.moves > max_moves_seen:
-            max_moves_seen = state.moves
-            print(f">>> moves: {max_moves_seen}")
         # Find all the possible next states from the current state
         for next_state in get_next_states(state):
             # If a next state hasn't been seen already, add it to back of queue
@@ -134,20 +130,23 @@ def calculate_state_hash(state):
                     Component(ComponentType.GENERATOR, comp.name))
                 modified_floor_data[floor].append(
                     Component(ComponentType.PAIR, "PAIR"))
-    return hash(f"moves {state.moves} // floor {state.floor} // {str(modified_floor_data)}")
+    return hash(f"{state.floor}#{str(modified_floor_data)}")
+    # return hash(f"{state.moves}#{state.floor}#{str(modified_floor_data)}")
 
 
 def get_next_states(state):
     """
     Determines the possible next states from the given state.
     """
-    next_states = []
+    # next_states = []
     move_options = itertools.chain(
         itertools.combinations(state.floor_data[state.floor], 2),
         itertools.combinations(state.floor_data[state.floor], 1))
+    two_moved_up = False
+    one_moved_down = False
     for components in move_options:
-        for floor_delta in [-1, 1]:
-            # Dont move down if all floors below are empty
+        for floor_delta in [1, -1]:
+            # Don't move down if all floors below are empty
             if floor_delta == -1:
                 skip = True
                 for sub_floor in range(1, state.floor):
@@ -159,8 +158,8 @@ def get_next_states(state):
             # Check that next floor is valid number
             if not 1 <= (next_floor := state.floor + floor_delta) <= 4:
                 continue
-            next_floor_data = deepcopy(state.floor_data)
             # Remove components from current floor and add to next floor
+            next_floor_data = deepcopy(state.floor_data)
             for comp in components:
                 next_floor_data[state.floor].remove(comp)
                 next_floor_data[next_floor].append(comp)
@@ -170,9 +169,21 @@ def get_next_states(state):
             # Check if both current and next floor are valid
             if validate_floor(next_floor_data[state.floor]) and \
                     validate_floor(next_floor_data[next_floor]):
-                next_states.append(
-                    State(state.moves + 1, next_floor, next_floor_data))
-    return next_states
+                # Don't move one component up if two can be moved up
+                if floor_delta == 1 and two_moved_up and len(components) == 1:
+                    continue
+                # Don't move two components down if one can be moved down
+                if floor_delta == -1 and one_moved_down and len(components) == 2:
+                    continue
+                # Check if two components moved up or one component moved down
+                if floor_delta == 1 and len(components) == 2:
+                    two_moved_up = True
+                elif floor_delta == -1 and len(components) == 1:
+                    one_moved_down = True
+                yield State(state.moves + 1, next_floor, next_floor_data)
+                # next_states.append(
+                #     State(state.moves + 1, next_floor, next_floor_data))
+    # return next_states
 
 
 def validate_floor(floor_components):
