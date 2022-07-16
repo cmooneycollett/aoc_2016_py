@@ -18,7 +18,6 @@ class Instruction(Enum):
     JUMP_NOT_ZERO = auto()  # jnz
 
 
-
 def process_input_file():
     """
     Processes the AOC 2016 Day 12 input file into the format required by the
@@ -58,8 +57,26 @@ def solve_part1(input_data):
     in the input data, and returns the resulting value held in register "a".
     """
     registers = {"a": 0, "b": 0, "c": 0, "d": 0}
+    execute_assembunny_program(input_data, registers)
+    return registers["a"]
+
+
+def solve_part2(input_data):
+    """
+    Solves AOC 2016 Day 12 Part 2 // Executes the assembunny instructions given
+    in the input data with register "c" initialised to 1, and returns the
+    resulting value held in register "a".
+    """
+    registers = {"a": 0, "b": 0, "c": 1, "d": 0}
+    execute_assembunny_program(input_data, registers)
+    return registers["a"]
+
+
+def execute_assembunny_program(assembunny_program, registers):
+    """
+    Executes the given assembunny program, using the given registers.
+    """
     program_counter = 0
-    assembunny_program = input_data
     while 0 <= program_counter < len(assembunny_program):
         instruct = assembunny_program[program_counter]
         match instruct[0]:
@@ -76,14 +93,6 @@ def solve_part1(input_data):
                     program_counter += int(instruct[2])
                     program_counter -= 1
         program_counter += 1
-    return registers["a"]
-
-
-def solve_part2(input_data):
-    """
-    Solves AOC 2016 Day 12 Part 2 // ###
-    """
-    return -1
 
 
 def try_parse_int(string):
@@ -95,6 +104,7 @@ def try_parse_int(string):
         return int(string)
     except ValueError:
         return string
+
 
 def try_register_read(param, registers):
     """
