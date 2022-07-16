@@ -201,7 +201,7 @@ class SolutionsTestMethods(unittest.TestCase):
 
     def test_day_12_p2(self):
         """
-        Solution test method for AOC 2016 Day 12 Part 1.
+        Solution test method for AOC 2016 Day 12 Part 2.
         """
         input_data = day_12.process_input_file()
         solution = day_12.solve_part2(input_data)
