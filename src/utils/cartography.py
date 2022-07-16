@@ -52,7 +52,9 @@ class CardinalDirection(Enum):
 @dataclass(frozen=True, eq=True)
 class Location2D:
     """
-    Represents a point location on a two-dimensional plane.
+    Represents a point location on a two-dimensional plane. Instances of this
+    dataclass will be immutable, and can be safely hashed and added to
+    collections like dicts (as keys) and sets.
     """
     loc_x: int
     loc_y: int
