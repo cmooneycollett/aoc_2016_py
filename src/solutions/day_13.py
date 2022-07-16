@@ -1,6 +1,7 @@
 """
-Solutions for AOC 2016 Day 13
+Solutions for AOC 2016 Day 13.
 """
+
 
 from collections import deque
 from enum import Enum, auto, unique
@@ -26,23 +27,48 @@ def process_input_file():
         return int(file.read().strip())
 
 
-def solve_part1(input_data):
+def solve_part1(seed_value):
     """
     Solves AOC 2016 Day 13 Part 1 // Determines the fewest number of steps
     required to reach location (31,39) when starting at (1,1).
     """
     start_loc = Location2D(1, 1)
     target_loc = Location2D(31, 39)
-    min_steps = find_minimum_steps_to_target_location(start_loc, target_loc,
-                                                      input_data)
-    return min_steps
+    return find_minimum_steps_to_target_location(start_loc, target_loc,
+                                                 seed_value)
 
 
-def solve_part2(input_data):
+def solve_part2(seed_value):
     """
-    Solves AOC 2016 Day 13 Part 2 // ###
+    Solves AOC 2016 Day 13 Part 2 // Determines the number of distinct
+    locations, including the starting location, that can be reached in at most
+    50 steps.
     """
-    return -1
+    start_loc = Location2D(1, 1)
+    max_steps = 50
+    return find_total_reachable_locations(start_loc, max_steps, seed_value)
+
+
+def find_total_reachable_locations(start_loc, max_steps, seed_value):
+    """
+    Calculates the total number of locations, including the starting location,
+    that can be reached by taking at most the given number of steps.
+    """
+    visited_cells = set([start_loc])
+    # Begin: starting location, 0 steps
+    to_be_visited = deque([(start_loc, 0)])
+    while len(to_be_visited) > 0:
+        # Get the next location to be visited
+        state = to_be_visited.popleft()
+        (_, steps) = state
+        if steps > max_steps:
+            return len(visited_cells) - len(to_be_visited) - 1
+        # Determine next locations to visit
+        for next_state in generate_next_states(state, seed_value):
+            (next_location, _) = next_state
+            if next_location not in visited_cells:
+                visited_cells.add(next_location)
+                to_be_visited.append(next_state)
 
 
 def find_minimum_steps_to_target_location(start_loc, target_loc, seed_value):
@@ -51,7 +77,7 @@ def find_minimum_steps_to_target_location(start_loc, target_loc, seed_value):
     the starting location, using a BFS approach. Cell types are dynamically
     calculated during search.
     """
-    visited_cells = set()
+    visited_cells = set([start_loc])
     to_be_visted = deque([(start_loc, 0)])  # Begin: starting location, 0 steps
     while len(to_be_visted) > 0:
         # Get the next location to be visited
@@ -60,31 +86,30 @@ def find_minimum_steps_to_target_location(start_loc, target_loc, seed_value):
         if location == target_loc:
             return steps
         # Determine next locations to visit
-        for next_state in determine_next_states(state, seed_value):
+        for next_state in generate_next_states(state, seed_value):
             (next_location, _) = next_state
             if next_location not in visited_cells:
                 visited_cells.add(next_location)
                 to_be_visted.append(next_state)
 
 
-def determine_next_states(state, seed_value):
+def generate_next_states(state, seed_value):
     """
-    Determines the next states that can be visited from the current state.
-    Note that diagonal moves are not permitted.
+    Determines the next states (location and steps taken) that can be reached
+    from the current state. Note that diagonal moves are not permitted.
     """
     next_steps = state[1] + 1
     directions = [(0, -1), (1, 0), (0, 1), (-1, 0)]
     for (x_delta, y_delta) in directions:
-        if y_delta == 0 and x_delta == 0:
-            continue
         new_x = state[0].loc_x + x_delta
         new_y = state[0].loc_y + y_delta
-        # Skip locations out of building
+        # Skip new locations that are outside of building
         if new_x < 0 or new_y < 0:
             continue
-        # Skip locations that are walls
+        # Skip new locations that are walls
         if determine_cell_type(new_x, new_y, seed_value) == CellType.WALL:
             continue
+        # Yield the next valid state
         new_location = Location2D(new_x, new_y)
         yield (new_location, next_steps)
 
@@ -96,7 +121,7 @@ def determine_cell_type(loc_x, loc_y, seed_value):
     value = loc_x * loc_x + 3 * loc_x + 2 * loc_x * loc_y + loc_y + \
         loc_y * loc_y
     value += seed_value
-    num_ones = bin(value).count("1")
-    if num_ones % 2 == 0:
+    ones_count = bin(value).count("1")
+    if ones_count % 2 == 0:
         return CellType.OPEN_SPACE
     return CellType.WALL
