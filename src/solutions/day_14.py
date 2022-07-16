@@ -23,14 +23,15 @@ def solve_part1(salt):
     Solves AOC 2016 Day 14 Part 1 // Determines the index that produces the 64th
     key for the one-time pad (without using key-stretching).
     """
-    return find_index_for_key(salt, 64)
+    return find_index_for_key(salt, 64, use_key_stretching=False)
 
 
 def solve_part2(salt):
     """
-    Solves AOC 2016 Day 14 Part 2 // ###
+    Solves AOC 2016 Day 14 Part 2 // Determines the index that produces the 64th
+    key for the one-time pad, with key-stretching enabled.
     """
-    return -1
+    return find_index_for_key(salt, 64, use_key_stretching=True)
 
 
 def find_index_for_key(salt, key_ord, use_key_stretching=False):
