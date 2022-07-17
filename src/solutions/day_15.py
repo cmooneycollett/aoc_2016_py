@@ -2,7 +2,7 @@
 Solutions for AOC 2016 Day 15.
 """
 
-
+from copy import deepcopy
 import re
 
 
@@ -18,14 +18,14 @@ class Disc:
         self.start_pos = start_pos
         self.offset = (total_pos - start_pos) % total_pos
 
-    def validate_time(self, time):
+    def validate_time(self, time_drop):
         """
         Checks if the slot position of the disk will be aligned with the capsule
         if the button is pressed at the given time.
         """
-        if time + self.disc_num < self.offset:
+        if time_drop + self.disc_num < self.offset:
             return False
-        return (time + self.disc_num - self.offset) % self.total_pos == 0
+        return (time_drop + self.disc_num - self.offset) % self.total_pos == 0
 
 
 def process_input_file():
@@ -56,21 +56,36 @@ def solve_part1(discs):
     button can be pressed in order to get a capsule to fall through all discs,
     specified in the input data.
     """
+    return determine_first_valid_drop_time(discs)
+
+
+def solve_part2(discs):
+    """
+    Solves AOC 2016 Day 15 Part 2 // Determines the first time at which the
+    button can be pressed in order to get a capsule to fall through all discs,
+    specified in the input data with addition of another disk (11 positions,
+    starting at position 0 at time 0) below the last disk.
+    """
+    discs_expanded = deepcopy(discs)
+    discs_expanded.append(Disc(discs_expanded[-1].disc_num + 1, 11, 0))
+    return determine_first_valid_drop_time(discs_expanded)
+
+
+def determine_first_valid_drop_time(discs):
+    """
+    Determines the first time at which the capsule can be dropped from the top
+    and pass through the slot in all of the given discs.
+    """
     time = 0
     while True:
+        # Check if the current time is valid for each disc
         valid_time = True
         for disc in discs:
             if not disc.validate_time(time):
                 valid_time = False
                 break
+        # Stop if the current time is valid, otherwise continue on to next time
         if valid_time:
             break
         time += 1
     return time
-
-
-def solve_part2(input_data):
-    """
-    Solves AOC 2016 Day 15 Part 2 // ###
-    """
-    return -1

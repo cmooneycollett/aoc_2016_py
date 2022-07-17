@@ -247,6 +247,14 @@ class SolutionsTestMethods(unittest.TestCase):
         solution = day_15.solve_part1(input_data)
         self.assertEqual(203660, solution)
 
+    def test_day_15_p2(self):
+        """
+        Solution test method for AOC 2016 Day 15 Part 2.
+        """
+        input_data = day_15.process_input_file()
+        solution = day_15.solve_part2(input_data)
+        self.assertEqual(2408135, solution)
+
 
 if __name__ == "__main__":
     unittest.main()
