@@ -198,6 +198,19 @@ def solve_day_15():
     print("==========")
 
 
+def solve_day_16():
+    """
+    Solves AOC 2016 Day 16 Parts 1 and 2, printing out the solutions.
+    """
+    print("AOC 2016 Day 16 - \"Dragon Checksum\"")
+    input_data = day_16.process_input_file()
+    p1_solution = day_16.solve_part1(input_data)
+    print(f"> P1 solution - {p1_solution}")
+    p2_solution = day_16.solve_part2(input_data)
+    print(f"> P2 solution - {p2_solution}")
+    print("==========")
+
+
 if __name__ == "__main__":
     # Import to allow execution from project top-level directory
     import os
@@ -206,21 +219,22 @@ if __name__ == "__main__":
     # Solution module imports
     from src.solutions import day_01, day_02, day_03, day_04, day_05, day_06, \
         day_07, day_08, day_09, day_10, day_11, day_12, day_13, day_14, \
-        day_15
+        day_15, day_16
     # Main solver methods
     print("==========")
-    solve_day_01()
-    solve_day_02()
-    solve_day_03()
-    solve_day_04()
-    solve_day_05()
-    solve_day_06()
-    solve_day_07()
-    solve_day_08()
-    solve_day_09()
-    solve_day_10()
-    solve_day_11()
-    solve_day_12()
-    solve_day_13()
-    solve_day_14()
-    solve_day_15()
+    # solve_day_01()
+    # solve_day_02()
+    # solve_day_03()
+    # solve_day_04()
+    # solve_day_05()
+    # solve_day_06()
+    # solve_day_07()
+    # solve_day_08()
+    # solve_day_09()
+    # solve_day_10()
+    # solve_day_11()
+    # solve_day_12()
+    # solve_day_13()
+    # solve_day_14()
+    # solve_day_15()
+    solve_day_16()
