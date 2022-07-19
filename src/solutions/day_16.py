@@ -25,9 +25,12 @@ def solve_part1(initial_state):
 
 def solve_part2(initial_state):
     """
-    Solves AOC 2016 Day 16 Part 2 // ###
+    Solves AOC 2016 Day 16 Part 2 // Determines the "checksum" for the data
+    generate using modified dragon curve algorithm to fill a disk of length
+    35651584.
     """
-    return -1
+    dragon_data_blob = generate_dragon_curve_data(initial_state, 35651584)
+    return generate_checksum(dragon_data_blob)
 
 
 def apply_dragon_curve_iteration(initial_state):
