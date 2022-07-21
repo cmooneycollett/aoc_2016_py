@@ -2,7 +2,6 @@
 Solutions for AOC 2016 Day 18.
 """
 
-
 import re
 
 
@@ -26,9 +25,11 @@ def solve_part1(first_row):
 
 def solve_part2(first_row):
     """
-    Solves AOC 2016 Day 18 Part 2 // ###
+    Solves AOC 2016 Day 18 Part 2 // Determines the number of safe tiles there
+    are in the first 400,000 rows of the trap room including the given first
+    row.
     """
-    return -1
+    return calculate_safe_tiles_in_rows(first_row, 400000)
 
 
 def calculate_safe_tiles_in_rows(first_row, total_rows):
@@ -49,19 +50,28 @@ def calculate_safe_tiles_in_rows(first_row, total_rows):
     # Consider each other row
     for _ in range(total_rows - 1):
         next_row = ""
-        for (index, char) in enumerate(trap_row):
+        for index in range(len(trap_row)):
             # Determine the header for each tile in the next row
-            if index == 0:
-                header = f".{char}{trap_row[index + 1]}"
-            elif index == len(trap_row) - 1:
-                header = f"{trap_row[index - 1]}{char}."
-            else:
-                header = f"{trap_row[index - 1]}{char}{trap_row[index + 1]}"
+            header = generate_header(trap_row, index)
             # Check if the header matches a trap pattern
-            if regex_trap.match(header) is not None:
-                next_row += "^"
-            else:
-                next_row += "."
+            match regex_trap.match(header):
+                case None:  # safe tile
+                    next_row += "."
+                case _:     # trap tile
+                    next_row += "^"
+        # Count number of safe tiles in the freshly generated row
         trap_row = next_row
         safe_count += trap_row.count(".")
     return safe_count
+
+
+def generate_header(trap_row, index):
+    """
+    Generates the string representing the three tiles from the given trap row
+    centred on the index.
+    """
+    if index == 0:
+        return f".{trap_row[index]}{trap_row[index + 1]}"
+    if index == len(trap_row) - 1:
+        return f"{trap_row[index - 1]}{trap_row[index]}."
+    return f"{trap_row[index - 1]}{trap_row[index]}{trap_row[index + 1]}"
