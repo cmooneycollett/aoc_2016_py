@@ -37,4 +37,14 @@ def solve_part2(num_elves):
     the presents when the gift exchange game ends (where elves in play steal the
     presents from the elf directly opposite them in the circle).
     """
-    return -1
+    elves_in_play = list(range(1, num_elves + 1))
+    index = 0
+    while len(elves_in_play) > 1:
+        # Remove elf directly opposite from current elf (left elf for tie-break)
+        target = (index + len(elves_in_play) // 2) % len(elves_in_play)
+        del elves_in_play[target]
+        # Accomodate for removing an elf earlier in the list
+        if target < index:
+            index -= 1
+        index = (index + 1) % len(elves_in_play)
+    return elves_in_play[0]
