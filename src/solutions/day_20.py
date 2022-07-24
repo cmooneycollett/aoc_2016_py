@@ -60,5 +60,6 @@ def solve_part2(ip_ranges):
     allowed_ips = 0
     for index in range(0, len(joined_ranges) - 1):
         allowed_ips += joined_ranges[index+1][0] - joined_ranges[index][1] - 1
+    allowed_ips += joined_ranges[0][0]
     allowed_ips += max_ip_addr - joined_ranges[-1][1]
     return allowed_ips
