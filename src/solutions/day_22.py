@@ -12,8 +12,10 @@ class NodeData:
     """
     Represents the used and available space for a single node, in terabytes.
     """
+    size: int
     used: int
     available: int
+    used_pct: int
 
 
 def process_input_file():
@@ -32,15 +34,18 @@ def process_input_file():
             if (match_nodedata := regex_nodedata.match(line)):
                 loc_x = int(match_nodedata.group(1))
                 loc_y = int(match_nodedata.group(2))
+                size = int(match_nodedata.group(3))
                 used = int(match_nodedata.group(4))
                 available = int(match_nodedata.group(5))
-                items.append(((loc_x, loc_y), NodeData(used, available)))
+                used_pct = int(match_nodedata.group(6))
+                items.append(((loc_x, loc_y), NodeData(
+                    size, used, available, used_pct)))
     # Shift the grid to start at location (0,0)
     min_x = min(x for ((x, _), _) in items)
     max_x = max(x for ((x, _), _) in items)
     min_y = min(y for ((_, y), _) in items)
     max_y = max(y for ((_, y), _) in items)
-    node_grid = [[NodeData(0, 0) for _ in range(max_x - min_x + 1)]
+    node_grid = [[NodeData(0, 0, 0, 0) for _ in range(max_x - min_x + 1)]
                  for _ in range(max_y - min_y + 1)]
     for ((loc_x, loc_y), nodedata) in items:
         node_grid[loc_y - min_y][loc_x - min_x] = nodedata
@@ -59,11 +64,28 @@ def solve_part1(node_grid):
     return viable_pairs
 
 
-def solve_part2(input_data):
+def solve_part2(_node_grid):
     """
-    Solves AOC 2016 Day 22 Part 2 // ###
+    Solves AOC 2016 Day 22 Part 2 // Returns the result gained by solving the
+    problem by hand, looking at moving the space from the empty node around as
+    a hole.
     """
-    return -1
+    return 225
+
+
+def print_node_grid(node_grid):
+    """
+    Prints out the node grid.
+    """
+    for row in node_grid:
+        for node_data in row:
+            if node_data.used_pct >= 90:
+                print("#", end="")
+            elif node_data.used_pct == 0:
+                print("_", end="")
+            else:
+                print(".", end="")
+        print("")
 
 
 def count_viable_pairs(node_grid, loc_x, loc_y):
