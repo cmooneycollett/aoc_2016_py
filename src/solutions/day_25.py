@@ -44,8 +44,9 @@ def solve_part1(assembunny_interpreter):
         seed += 1
 
 
-def solve_part2(assembunny_interpreter):
+def solve_part2(_):
     """
-    Solves AOC 2016 Day 25 Part 2 // ###
+    Solves AOC 2016 Day 25 Part 2 // Signal is transmitted and Christmas is
+    saved!
     """
-    return -1
+    return True
