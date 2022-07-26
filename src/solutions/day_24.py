@@ -56,7 +56,19 @@ def solve_part1(grid_data):
     (grid, numbered_locations) = grid_data
     # For each numbered location, determine minimum steps to each other one
     distances = determine_numbered_location_distances(grid, numbered_locations)
-    return determine_min_steps_to_visit_all_nodes(distances)
+    return determine_min_steps_to_visit_all_nodes(distances, return_to_zero=False)
+
+
+def solve_part2(grid_data):
+    """
+    Solves AOC 2016 Day 24 Part 2 //  Determines the fewest number of moves
+    required for the robot to visit all of the numbered locations at least once,
+    starting from the "0" location, and return to the "0" node
+    """
+    (grid, numbered_locations) = grid_data
+    # For each numbered location, determine minimum steps to each other one
+    distances = determine_numbered_location_distances(grid, numbered_locations)
+    return determine_min_steps_to_visit_all_nodes(distances, return_to_zero=True)
 
 
 def determine_min_steps_to_visit_all_nodes(distances, return_to_zero=False):
@@ -74,7 +86,7 @@ def determine_min_steps_to_visit_all_nodes(distances, return_to_zero=False):
         for index in range(1, len(order)):
             total_distance += distances[order[index - 1]][order[index]]
         if return_to_zero:
-            total_distance += distances[-1]["0"]
+            total_distance += distances[order[-1]]["0"]
         # Check if a new minimum distance has been found
         if min_distance is None or total_distance < min_distance:
             min_distance = total_distance
@@ -135,10 +147,3 @@ def generate_next_location_states(grid, state):
             continue
         new_loc = Location2D(new_x, new_y)
         yield (new_loc, steps + 1)
-
-
-def solve_part2(input_data):
-    """
-    Solves AOC 2016 Day 24 Part 2 // ###
-    """
-    return -1
