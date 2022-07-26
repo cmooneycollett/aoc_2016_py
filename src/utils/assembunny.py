@@ -17,6 +17,7 @@ class AssembunnyOperation(Enum):
     DECREASE = auto()       # dec
     JUMP_NOT_ZERO = auto()  # jnz
     TOGGLE = auto()         # tgl
+    OUT = auto()            # out
 
 
 class AssembunnyInterpreter:
@@ -99,7 +100,12 @@ class AssembunnyInterpreter:
                             case AssembunnyOperation.TOGGLE:    # 1-arg
                                 target_instruct = (AssembunnyOperation.INCREASE,
                                     target_instruct[1])
+                            case AssembunnyOperation.OUT:   # 1-arg
+                                target_instruct = (AssembunnyOperation.INCREASE,
+                                    target_instruct[1])
                         self.instructions[target_index] = target_instruct
+                case AssembunnyOperation.OUT:
+                    yield self.try_register_read(instruct[1])
             self.program_counter += 1
 
     @classmethod
@@ -114,6 +120,7 @@ class AssembunnyInterpreter:
         regex_dec = re.compile(r"^dec ([abcd])$")
         regex_jnz = re.compile(r"^jnz ([abcd]|-?\d+) ([abcd]|-?\d+)$")
         regex_tgl = re.compile(r"^tgl ([abcd]|-?\d+)$")
+        regex_out = re.compile(r"^out ([abcd]|-?\d+)$")
         for line in raw_input.splitlines():
             if len(line := line.strip()) == 0:
                 continue
@@ -135,4 +142,7 @@ class AssembunnyInterpreter:
             elif match_tgl := regex_tgl.match(line):
                 param1 = match_tgl.group(1)
                 instructions.append((AssembunnyOperation.TOGGLE, param1))
+            elif match_out := regex_out.match(line):
+                param1 = match_out.group(1)
+                instructions.append((AssembunnyOperation.OUT, param1))
         return instructions
